@@ -1,0 +1,28 @@
+<package>
+  <name>fake_imu</name>
+  <version>1.2.0</version>
+  <description>
+     fake_imu is a package that provides fake imu data to use in sim.
+  </description>
+
+  <maintainer email="sebastian@helzer.eu">Sebastian Helzer</maintainer>
+
+  <license>BSD</license>
+
+  <author>Tang Tiong Yew</author>
+  <author>Kristof Robot</author>
+  <author>Paul Bouchier</author>
+  <author>Peter Bartz</author>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>dynamic_reconfigure</build_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>dynamic_reconfigure</run_depend>
+</package>
+
+

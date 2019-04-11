@@ -1,0 +1,11 @@
+<launch>
+  <arg name="razor_config_file" default="$(find fake_imu)/config/my_razor.yaml"/>
+  <node pkg="fake_imu" type="imu_node.py" name="imu_node" output="screen">
+    <rosparam file="$(arg razor_config_file)" command="load"/>
+    <remap from="imu" to="example/imu"/>
+  </node>
+
+  <node pkg="fake_imu" type="depth_node.py" name="depth_node" output="screen">
+    <remap from="depth" to="example/pose"/>
+  </node>
+</launch>

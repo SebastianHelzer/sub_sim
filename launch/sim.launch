@@ -1,0 +1,26 @@
+<launch>
+  <arg name="razor_config_file" default="$(find fake_imu)/config/my_razor.yaml"/>
+  <node pkg="fake_imu" type="imu_node.py" name="imu_node" output="screen">
+    <rosparam file="$(arg razor_config_file)" command="load"/>
+    <remap from="imu" to="example/imu"/>
+  </node>
+
+  <node pkg="fake_imu" type="depth_node.py" name="depth_node" output="screen">
+    <remap from="depth" to="example/pose"/>
+  </node>
+
+   <node pkg="fake_imu" type="control_model.py" name="model_node" output="screen">
+    <remap from="input" to="cmd_accel"/>
+    <remap from="state" to="odometry/filtered"/>
+  </node>
+
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+    <rosparam command="load" file="$(find robot_localization)/params/ekf.yaml" />
+
+    <!--  Placeholder for output topic remapping
+    <remap from="odometry/filtered" to=""/>
+    <remap from="accel/filtered" to=""/>
+    -->
+
+  </node>
+</launch>
