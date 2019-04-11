@@ -33,6 +33,49 @@ def inputCallback(data):
     m = data.linear.y
     n = data.linear.z
 
+def calcKinematics(x,u):
+    pn    = x(1)
+    pe    = x(2)
+    pe    = x(3)
+    u     = x(4)
+    v     = x(5)
+    w     = x(6)
+    phi   = x(7)
+    theta = x(8)
+    psi   = x(9)
+    p     = x(10)
+    q     = x(11)
+    r     = x(12)
+    fx    = uu(1)
+    fy    = uu(2)
+    fz    = uu(3)
+    ell   = uu(4)
+    m     = uu(5)
+    n     = uu(6)
+
+    gamma_1 = (Jy - Jz)/Jx
+    gamma_2 = (Jz - Jx)/Jy
+    gamma_3 = (Jx - Jy)/Jz
+    
+    rvb = v2b( [psi, theta, phi] )
+    rbv = numpy.transpose(rvb)
+    
+    cph = cos(phi)
+    sph = sin(phi)
+    cth = cos(theta)
+    tth = tan(theta)
+    A_euler = [1, sph*tth,  cph*tth,
+               0,     cph,     -sph,
+               0, sph/cth,  cph/cth].reshape((3, 3))
+           
+    #Compute state derivative
+    posdot_ned = rbv * numpy.transpose([u, v, w])
+    veldot_b = numpy.transpose([r*v - q*w, p*w - r*u, q*u - p*v] + [a,b,c])
+    attdot = A_euler * numpy.transpose([p,q,r])
+    attratedot = numpy.transpose( [gamma_1*q*r,gamma_2*p*r,gamma_3*p*q]
+                  + [1/Jx*ell,1/Jy*m,1/Jz*n])
+
+    return [posdot_ned,veldot_b,attdot,attratedot]
 
 rospy.init_node("control_model_node")
 #We only care about the most recent measurement, i.e. queue_size=1
@@ -63,6 +106,11 @@ rospy.loginfo("Starting up fake robot model...")
 mu = 0
 sigma = .001
 
+Jx = 1
+Jy = 1
+Jz = 1
+mass = 5
+
 # Position - State
 x = 0 
 y = 0
@@ -91,6 +139,9 @@ n = 0
 
 seq = 0
 while not rospy.is_shutdown():
+
+    # [posdot_ned,veldot_b,attdot,attratedot] = calcKinematics(state,accel)
+
     odomMsg.pose.pose.orientation.x = q1
     odomMsg.pose.pose.orientation.y = q2
     odomMsg.pose.pose.orientation.z = q3
