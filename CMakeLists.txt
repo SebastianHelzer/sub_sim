@@ -3,7 +3,7 @@ project(fake_imu)
 
 find_package(catkin REQUIRED COMPONENTS dynamic_reconfigure)
 
-generate_dynamic_reconfigure_options(cfg/imu.cfg)
+generate_dynamic_reconfigure_options(cfg/imu.cfg cfg/pid.cfg)
 
 catkin_package(DEPENDS CATKIN DEPENDS dynamic_reconfigure)
 
