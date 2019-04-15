@@ -32,6 +32,8 @@ catkin_install_python(PROGRAMS
 	nodes/depth_node.py
 	nodes/control_model.py
 	nodes/motor_controller.py
+	nodes/pressure_to_depth.py
+	nodes/euler_from_quat.py
 	nodes/display_3D_visualization.py
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/nodes
 )
