@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import rospy
+import tf
 import serial
 import string
 import math
@@ -74,9 +75,9 @@ def reconfig_callback(config, level):
     pidP = PID(P_kp, P_ki, P_kd, setpoint=P_d)
     return config
 
-def odomCallback(msg):
+def odomCallback(data):
     global pitch,roll,depth
-    depth = msg.pose.pose.position.z
+    depth = data.pose.pose.position.z
     (roll,pitch,yaw) = tf.transformations.euler_from_quaternion(
         [data.pose.pose.orientation.x,data.pose.pose.orientation.y,data.pose.pose.orientation.z,data.pose.pose.orientation.w])
     
