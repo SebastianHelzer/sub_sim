@@ -6,7 +6,7 @@
   </node>
 
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
-    <rosparam command="load" file="$(find robot_localization)/params/ekf.yaml" />
+    <rosparam command="load" file="$(find fake_imu)/config/ekf.yaml" />
   </node>
 
   <node pkg="fake_imu" type="euler_from_quat.py" name="euler_transform">

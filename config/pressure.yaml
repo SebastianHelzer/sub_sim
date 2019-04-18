@@ -1,0 +1,19 @@
+!!python/object/new:dynamic_reconfigure.encoding.Config
+dictitems:
+  groups: !!python/object/new:dynamic_reconfigure.encoding.Config
+    dictitems:
+      groups: !!python/object/new:dynamic_reconfigure.encoding.Config
+        state: []
+      id: 0
+      name: Default
+      parameters: !!python/object/new:dynamic_reconfigure.encoding.Config
+        state: []
+      parent: 0
+      sensor_offset: 311.0
+      sensor_scale: -0.05555555555555555
+      state: true
+      type: ''
+    state: []
+  sensor_offset: 311.0
+  sensor_scale: -0.05555555555555555
+state: []

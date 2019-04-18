@@ -106,6 +106,8 @@ def reconfig_callback(config, level):
 
 def mod180(a,n):
     return (a - math.floor(a/n) * n)
+def getBoundedAngleError(angle):
+    return mod180(angle + 180,360) - 180
 
 def odomCallback(data):
     global pitch,roll,depth,yaw,v_x,v_y,v_z
@@ -115,10 +117,10 @@ def odomCallback(data):
     v_z = data.twist.twist.linear.z
     (r,p,y) = tf.transformations.euler_from_quaternion(
         [data.pose.pose.orientation.x,data.pose.pose.orientation.y,data.pose.pose.orientation.z,data.pose.pose.orientation.w])
-    roll =  mod180(r * rad2degress,360) - 180 
-    pitch = mod180(p * rad2degress + 180,360) - 180
-    yaw =   mod180(y * rad2degress + 180,360) - 180
-    
+    roll =  getBoundedAngleError(r * rad2degress) 
+    pitch = getBoundedAngleError(p * rad2degress)
+    yaw =   getBoundedAngleError(y * rad2degress)
+
 
 rospy.init_node("pid_control_node")
 pub = rospy.Publisher('cmd_accel', Accel, queue_size=1)
