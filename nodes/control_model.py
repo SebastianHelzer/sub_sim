@@ -165,5 +165,6 @@ while not rospy.is_shutdown():
     seq = seq + 1
     pub.publish(odomMsg) 
 
-    rate.sleep()
-        
+    try:
+        rate.sleep()
+    except rospy.ROSInterruptException: pass

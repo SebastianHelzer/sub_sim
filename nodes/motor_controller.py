@@ -52,5 +52,7 @@ while not rospy.is_shutdown():
     seq = seq + 1
     pub.publish(poseMsg) 
 
-    rate.sleep()
+    try:
+        rate.sleep()
+    except rospy.ROSInterruptException: pass
         

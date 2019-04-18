@@ -147,5 +147,7 @@ while not rospy.is_shutdown():
 
     pub.publish(cmdMsg)
 
-    rate.sleep()
+    try:
+        rate.sleep()
+    except rospy.ROSInterruptException: pass
         

@@ -37,6 +37,7 @@ while not rospy.is_shutdown():
     eulerMsg.z = y * 180.0/3.14159
 
     pub.publish(eulerMsg) 
-
-    rate.sleep()
-        
+   
+    try:
+        rate.sleep()
+    except rospy.ROSInterruptException: pass

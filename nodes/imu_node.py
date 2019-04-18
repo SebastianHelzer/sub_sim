@@ -226,5 +226,7 @@ while not rospy.is_shutdown():
         diag_arr.status.append(diag_msg)
         diag_pub.publish(diag_arr)
 
-    rate.sleep()
+    try:
+        rate.sleep()
+    except rospy.ROSInterruptException: pass
         
