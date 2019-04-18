@@ -38,8 +38,6 @@ odomMsg = Odometry()
 seq = 0
 while not rospy.is_shutdown():
 
-    odomMsg.pose.pose.position.z = depth
-
     odomMsg.pose.pose.position = depth.pose.pose.position
     odomMsg.pose.pose.orientation = imuMsg.orientation
     
