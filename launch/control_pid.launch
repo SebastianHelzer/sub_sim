@@ -13,7 +13,7 @@
     <remap from="odom" to="odometry/filtered"/>
   </node>  
   
-  <node pkg="fake_imu" type="pid_control.py" name="pid_control">
+  <node pkg="fake_imu" type="pid_control.py" name="pid_control"  output="screen">
     <remap from="odom" to="odometry/filtered"/>
   </node>
 </launch>
