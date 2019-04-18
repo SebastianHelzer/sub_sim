@@ -1,0 +1,39 @@
+<launch>
+  <rosparam command="load" file="$(find global)/global-params.yaml" />
+  <rosparam command="load" file="$(find global)/motor-config.yaml" />
+  <node pkg="usu_amr" type="motor_reconfigure_server.py" name="reconfigure_server" output="screen">
+    <param name="config_filename" value="$(find global)/motor-config.yaml" />
+    <rosparam>
+      restart_nodes: ['motor_controller']
+    </rosparam>
+  </node>
+  <node pkg="motor_kinematics" type="omni_swim_effort_node" name="omni_swim" output="screen"/>
+  <node pkg="rosserial_python" type="serial_node.py" name="motor_controller" output="screen" respawn="true" respawn_delay="2">
+    <param name="port" value="/dev/ttyACM0"/>
+  </node>
+  
+  <arg name="razor_config_file" default="$(find razor_imu_9dof)/config/my_razor.yaml"/>
+  <node pkg="razor_imu_9dof" type="imu_node.py" name="imu_node" output="screen" respawn="true" respawn_delay="2">
+    <rosparam file="$(arg razor_config_file)" command="load"/>
+  </node>
+  
+  <node pkg="fake_imu" type="pressure_to_depth.py" name="pressure_node" output="screen">
+  </node>
+
+  <node pkg="fake_imu" type="euler_from_quat.py" name="euler_transform">
+    <remap from="odom" to="odometry/filtered"/>
+  </node>
+  
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" > 
+     <arg name="port" value="9090"/>
+     <remap from="cmd_accel" to="cmd_accel/control"/>
+  </include>
+  
+  <node pkg="fake_imu" type="pid_control.py" name="pid_control">
+    <remap from="odom" to="odometry/filtered"/>
+  </node>
+
+  <node pkg="fake_imu" type="state_estimator.py" name="state_estimator">
+    <remap from="odom" to="odometry/filtered"/>
+  </node>
+</launch>
