@@ -97,15 +97,16 @@ def reconfig_callback(config, level):
     Vx_ki = config['Vx_ki']
     Vx_kd = config['Vx_kd']
 
-    pidD = PID(D_kp, D_ki, D_kd, setpoint=D_d)
-    pidR = PID(R_kp, R_ki, R_kd, setpoint=R_d)
-    pidP = PID(P_kp, P_ki, P_kd, setpoint=P_d)
-    pidVx = PID(Vx_kp, Vx_ki, Vx_kd, setpoint=Vx_d)
-    pidY = PID(Y_kp, Y_ki, Y_kd, setpoint=Y_d)
+    pidD = PID(D_kp, D_ki, D_kd, setpoint=0)
+    pidR = PID(R_kp, R_ki, R_kd, setpoint=0)
+    pidP = PID(P_kp, P_ki, P_kd, setpoint=0)
+    pidVx = PID(Vx_kp, Vx_ki, Vx_kd, setpoint=0)
+    pidY = PID(Y_kp, Y_ki, Y_kd, setpoint=0)
     return config
 
 def mod180(a,n):
     return (a - math.floor(a/n) * n)
+
 def getBoundedAngleError(angle):
     return mod180(angle + 180,360) - 180
 
@@ -117,9 +118,9 @@ def odomCallback(data):
     v_z = data.twist.twist.linear.z
     (r,p,y) = tf.transformations.euler_from_quaternion(
         [data.pose.pose.orientation.x,data.pose.pose.orientation.y,data.pose.pose.orientation.z,data.pose.pose.orientation.w])
-    roll =  getBoundedAngleError(r * rad2degress) 
-    pitch = getBoundedAngleError(p * rad2degress)
-    yaw =   getBoundedAngleError(y * rad2degress)
+    roll =  (r * rad2degress) - 180
+    pitch = (p * rad2degress)
+    yaw =   (y * rad2degress)
 
 
 rospy.init_node("pid_control_node")
@@ -133,11 +134,12 @@ cmdMsg = Accel()
 rospy.loginfo("Starting up pid controller...")
 
 while not rospy.is_shutdown():
-    cP = pidP(pitch)
-    cR = pidR(roll)
+    cP = pidP(getBoundedAngleError(pitch - P_d))
+    cR = pidR(getBoundedAngleError(roll - R_d))
+    cY = pidY(getBoundedAngleError(yaw - Y_d))
+
     cD = pidD(depth)
     cV_x = pidVx(v_x)
-    cY = pidY(yaw)
 
     cmdMsg.linear.x = cV_x
     cmdMsg.linear.z = cD
