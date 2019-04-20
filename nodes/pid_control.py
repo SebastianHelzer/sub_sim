@@ -143,8 +143,8 @@ while not rospy.is_shutdown():
 
     cmdMsg.linear.x = cV_x
     cmdMsg.linear.z = cD
-    cmdMsg.angular.x = cR
-    cmdMsg.angular.y = cP
+    cmdMsg.angular.x = cP
+    cmdMsg.angular.y = cR
     cmdMsg.angular.z = cY
 
     pub.publish(cmdMsg)

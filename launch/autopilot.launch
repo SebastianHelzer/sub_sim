@@ -36,4 +36,9 @@
   <node pkg="fake_imu" type="state_estimator.py" name="state_estimator">
     <remap from="odom" to="odometry/filtered"/>
   </node>
+
+  <node name="dynamic_reconfigure_load" pkg="dynamic_reconfigure" 
+type="dynparam" 
+args="load /pid_control $(find fake_imu)/config/pid.yaml" />
+
 </launch>
